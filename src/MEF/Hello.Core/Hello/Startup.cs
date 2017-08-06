@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections;
-using Newtonsoft.Json.Converters;
 
 namespace Hello
 {
@@ -25,22 +22,7 @@ namespace Hello
         }
        
     }
-    public static class ExpandoObjectExtensions
-    {
-        public static ExpandoObject Clone(this ExpandoObject original)
-        {
-            var expandoObjectConverter = new ExpandoObjectConverter();
-            var originalDoc = JsonConvert.SerializeObject(original, expandoObjectConverter);
-            dynamic clone = JsonConvert.DeserializeObject<ExpandoObject>(originalDoc, expandoObjectConverter);
-            return clone;
-        }
-        public static string ToJson(this ExpandoObject original)
-        {
-            var expandoObjectConverter = new ExpandoObjectConverter();
-            var originalDoc = JsonConvert.SerializeObject(original, expandoObjectConverter);
-            return originalDoc;
-        }
-    }
+
 
     public class Startup
     {
@@ -49,13 +31,21 @@ namespace Hello
         public static int count = 0;
         public async Task<object> Invoke(object input)
         {
-            string json;
-            try
+            string json = "not set";
+            string jsonBody = "not set";
+            string url = "not set";
+            string method = "not set"; try
             {
                 ExpandoObject expandoInput = input as ExpandoObject;
                 var expandoDict = expandoInput as IDictionary<string, object>;
-                dynamic body = expandoDict["body"];
+                url = expandoDict["url"] as string;
+                method = expandoDict["method"] as string;
+                ExpandoObject body = expandoDict["body"] as ExpandoObject; ;
                 json = expandoInput.ToJson();
+                jsonBody = body.ToJson();
+                url.ValidateStartsWith("local://");
+                url = url.RemoveFirst("local://");
+                method.ValidateMethod();
             }
             catch (Exception e)
             {
@@ -63,7 +53,7 @@ namespace Hello
             }
      
             ++count;
-            return $"Hello from dot net:[{count}],json[{json}]";
+            return $"Hello from dot net:[{count}],json[{json}],url[{url}],method[{method}],jsonBody[{jsonBody}]";
         }
     }
 }

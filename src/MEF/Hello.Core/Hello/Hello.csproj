@@ -43,10 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpandoObjectExtensions.cs" />
+    <Compile Include="InputValidationExtensions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
+      <Project>{f41beaad-9ae2-4eca-a290-2cb989118860}</Project>
+      <Name>Command.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
+      <Project>{6b9e93c7-f65f-4000-84eb-369b58367f91}</Project>
+      <Name>Programs.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProgramsCommand\ProgramsCommand.csproj">
+      <Project>{ba84d611-1390-4d4a-8c2d-5544deda9b59}</Project>
+      <Name>ProgramsCommand</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Synoptic.CommandAction\Synoptic.CommandAction.csproj">
       <Project>{f72d4e2d-edc7-4fc3-8fa5-44ba92984785}</Project>
       <Name>Synoptic.CommandAction</Name>
