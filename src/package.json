@@ -21,6 +21,8 @@
     "electron": "~1.6.2"
   },
   "dependencies": {
-    "electron-edge": "^6.5.5"
+    "electron-edge": "^6.5.5",
+    "electron-json-storage": "^3.0.7",
+    "load-json-file": "^2.0.0"
   }
 }

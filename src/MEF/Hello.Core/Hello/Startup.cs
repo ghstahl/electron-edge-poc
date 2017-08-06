@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using System.Collections;
+using Newtonsoft.Json;
+using Programs.Repository;
+using Synoptic;
 
 namespace Hello
 {
@@ -20,40 +23,59 @@ namespace Hello
 
             return expando as ExpandoObject;
         }
-       
+
     }
 
 
     public class Startup
     {
-
+        public Startup()
+        {
+            var programsRepository = new ProgramsRepository();
+            ProgramsCommand.Programs.ProgramsRepository = programsRepository;
+            ProgramsCommand.Processes.ProgramsRepository = programsRepository;
+        }
 
         public static int count = 0;
+
         public async Task<object> Invoke(object input)
         {
-            string json = "not set";
-            string jsonBody = "not set";
-            string url = "not set";
-            string method = "not set"; try
+            Input strongInput = null;
+            string json = null;
+            string error = null;
+            RunResult runResult = null;
+            string jsonRunResult = null;
+            try
             {
+                strongInput = input.ToInput();
                 ExpandoObject expandoInput = input as ExpandoObject;
                 var expandoDict = expandoInput as IDictionary<string, object>;
-                url = expandoDict["url"] as string;
-                method = expandoDict["method"] as string;
-                ExpandoObject body = expandoDict["body"] as ExpandoObject; ;
+
+                ExpandoObject body = expandoDict["body"] as ExpandoObject;
+                
                 json = expandoInput.ToJson();
-                jsonBody = body.ToJson();
-                url.ValidateStartsWith("local://");
-                url = url.RemoveFirst("local://");
-                method.ValidateMethod();
+                runResult = new CommandRunner().RunViaRoute(new[]
+                {
+                    strongInput.Url,
+                    strongInput.Method,
+                    $@"--body={strongInput.JsonBody}"
+                });
+                jsonRunResult = JsonConvert.SerializeObject(runResult);
             }
             catch (Exception e)
             {
-                json = e.Message;
+                error = e.Message;
             }
-     
+
             ++count;
-            return $"Hello from dot net:[{count}],json[{json}],url[{url}],method[{method}],jsonBody[{jsonBody}]";
+            if (!string.IsNullOrEmpty(error))
+            {
+                return $"Hello from dot net:[{count}],error[{error}]";
+            }
+            return $"Hello from dot net:[{count}],json[{json}]," +
+                   $"url[{strongInput.Url}],method[{strongInput.Method}]," +
+                   $"jsonHeaders[{strongInput.JsonHeaders}],jsonBody[{strongInput.JsonBody}]," +
+                   $"jsonRunResult:[{jsonRunResult}]";
         }
     }
 }

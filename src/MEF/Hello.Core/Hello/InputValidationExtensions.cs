@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace Hello
@@ -22,6 +24,41 @@ namespace Hello
             {
                 throw new Exception($"Method [{stringToCheck}] is not allowed");
             }
+        }
+
+        public static Input ToInput(this object input)
+        {
+            string json = "not set";
+            string jsonBody = "not set";
+            string url = "not set";
+            string method = "not set";
+            string jsonHeaders = "{}";
+
+            ExpandoObject expandoInput = input as ExpandoObject;
+            var expandoDict = expandoInput as IDictionary<string, object>;
+            url = expandoDict["url"] as string;
+            method = expandoDict["method"] as string;
+            ExpandoObject body = expandoDict["body"] as ExpandoObject;
+            ExpandoObject headers = expandoDict["headers"] as ExpandoObject;
+            if (headers != null)
+            {
+                jsonHeaders = headers.ToJson();
+            }
+            json = expandoInput.ToJson();
+            jsonBody = body.ToJson();
+            url.ValidateStartsWith("local://");
+            url = url.RemoveFirst("local://");
+            method.ValidateMethod();
+
+            return new Input()
+            {
+                Method = method,
+                Url =  url,
+                Body = body,
+                JsonBody = jsonBody,
+                JsonHeaders = jsonHeaders,
+                Headers = headers
+            };
         }
     }
 }

@@ -30,10 +30,14 @@ function createWindow() {
     });
 
     helloWorld({
-        url: 'local://My/Route/Base/v1/compleX',
+        url: 'local://v1/programs/is-installed',
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
         body: {
-            a: 'b'
+            displayName: 'Norton Internet Security'
         }
     }, function(error, result) {
         if (error) throw error;

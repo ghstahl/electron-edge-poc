@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExpandoObjectExtensions.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="InputValidationExtensions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
