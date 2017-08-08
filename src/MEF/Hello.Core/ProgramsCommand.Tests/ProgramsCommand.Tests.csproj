@@ -75,6 +75,10 @@
       <Project>{138614E4-00B1-4186-85FE-218A687770FA}</Project>
       <Name>Programs.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ProgramsCommand\ProgramsCommand.csproj">
+      <Project>{ba84d611-1390-4d4a-8c2d-5544deda9b59}</Project>
+      <Name>ProgramsCommand</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Synoptic.CommandAction\Synoptic.CommandAction.csproj">
       <Project>{f72d4e2d-edc7-4fc3-8fa5-44ba92984785}</Project>
       <Name>Synoptic.CommandAction</Name>
@@ -91,9 +95,9 @@
   </Target>
   <Import Project="..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>md "$(ProjectDir)$(OutDir)\components"
-echo copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
-copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
+    <PostBuildEvent>REM md "$(ProjectDir)$(OutDir)\components"
+REM echo copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
+REM copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

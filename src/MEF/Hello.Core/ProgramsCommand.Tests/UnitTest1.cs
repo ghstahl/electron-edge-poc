@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Command.Common;
 using Command.MEF.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,14 +30,15 @@ namespace ProgramsCommand.Tests
 
             var root = Assembly.GetAssembly(typeof(UnitTestMef)).Location;
             var dir = Path.GetDirectoryName(root);
-            var components = Path.Combine(dir, "components");
+            var components = dir;
+          //  var components = Path.Combine(dir, "components");
             CommandCompositionHelper = new CommandCompositionHelper(components);
             CommandCompositionHelper.AssembleCommandComponents();
             CommandCompositionHelper.Initialize();
         }
 
         [TestMethod]
-        public void TestMethod_is_installed_success()
+        public async Task TestMethod_is_installed_success()
         {
             var camelSettings = new JsonSerializerSettings
             {
@@ -49,7 +51,7 @@ namespace ProgramsCommand.Tests
                 camelSettings);
 
 
-            var runResult = new CommandRunner().RunViaRoute(new[]
+            var runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
             {
                 "v1/programs/page",
                 "GET",
@@ -66,7 +68,7 @@ namespace ProgramsCommand.Tests
                 camelSettings);
 
            
-            runResult = new CommandRunner().RunViaRoute(new[]
+            runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
             {
                 "v1/programs/is-installed",
                 "GET",
@@ -77,7 +79,7 @@ namespace ProgramsCommand.Tests
         }
 
         [TestMethod]
-        public void TestMethod_page_success()
+        public async Task TestMethod_page_success()
         {
             var camelSettings = new JsonSerializerSettings
             {
@@ -89,7 +91,7 @@ namespace ProgramsCommand.Tests
                 camelSettings);
 
 
-            var runResult = new CommandRunner().RunViaRoute(new[]
+            var runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
             {
                 "v1/programs/page",
                 "GET",

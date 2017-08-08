@@ -124,7 +124,7 @@ namespace Synoptic.CEF.Tests
                 "complex-param-to-hyphen-with-return",
                 string.Format(@"--param-one={0}", json)
             });
-            runResult = new CommandRunner().RunViaRoute(new[]
+            runResult = new CommandRunner().RunViaRouteAsync(new[]
             {
                 "My/Route/Base/v1/compleX",
                 "GET",

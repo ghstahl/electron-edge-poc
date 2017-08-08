@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Synoptic.Exceptions;
+using Synoptic.Extensions;
 
 namespace Synoptic
 {
@@ -14,6 +16,46 @@ namespace Synoptic
     }
     public static class CommandActionExtensions
     {
+
+        internal static async Task<RunResult> RunAsync(this CommandAction commandAction, ICommandDependencyResolver resolver,
+            CommandLineParseResult parseResult)
+        {
+            var instance = resolver.Resolve(commandAction.LinkedToMethod.DeclaringType);
+            object[] parameterValues = GetCommandParameterValues(commandAction.Parameters, parseResult);
+
+            var returnResult = new RunResult() { ReturnType = commandAction.LinkedToMethod.ReturnType };
+            if (commandAction.LinkedToMethod.ReturnType != typeof(void))
+            {
+                object res = null;
+                if (commandAction.LinkedToMethod.IsAsyncMethod())
+                {
+                    dynamic result =  (Task) commandAction.LinkedToMethod.Invoke(instance, parameterValues);
+                    await result;
+                    res = result.Result;
+                }
+                else
+                {
+                    res = commandAction.LinkedToMethod.Invoke(instance, parameterValues);
+                }
+                returnResult.Value = res;
+                /*
+                returnResult.Json = JsonConvert.SerializeObject(
+
+                    res,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+                    */
+            }
+            else
+            {
+                commandAction.LinkedToMethod.Invoke(instance, parameterValues);
+            }
+            return returnResult;
+        }
+
+
         internal static RunResult Run(this CommandAction commandAction, ICommandDependencyResolver resolver,
             CommandLineParseResult parseResult)
         {

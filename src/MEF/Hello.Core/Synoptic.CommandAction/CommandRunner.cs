@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Mono.Options;
 using Synoptic.Exceptions;
 
@@ -82,7 +83,7 @@ namespace Synoptic
         private readonly HelpGenerator _helpGenerator = new HelpGenerator();
         private OptionSet _optionSet;
 
-        public RunResult RunViaRoute(string[] args)
+        public async Task<RunResult> RunViaRouteAsync(string[] args)
         {
             if (args == null)
                 args = new string[0];
@@ -122,7 +123,7 @@ namespace Synoptic
                 var parser = new CommandLineParser();
 
                 CommandLineParseResult parseResult = parser.Parse(action, arguments.ToArray());
-                return parseResult.CommandAction.Run(_resolver, parseResult);
+                return await parseResult.CommandAction.RunAsync(_resolver, parseResult);
             }
             catch (CommandParseExceptionBase exception)
             {

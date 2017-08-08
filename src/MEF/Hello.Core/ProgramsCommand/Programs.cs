@@ -28,7 +28,7 @@ namespace ProgramsCommand
         }
 
         [CommandAction(Route = "is-installed", Method = "GET")]
-        public PrimitiveValue<bool> GetIsInstalled([CommandParameter(FromBody = true)]IsInstalledQuery body)
+        public async Task<PrimitiveValue<bool>> GetIsInstalled([CommandParameter(FromBody = true)]IsInstalledQuery body)
         {
             var result = ProgramsRepository.IsInstalled(body.DisplayName);
             return new PrimitiveValue<bool>(result);

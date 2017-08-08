@@ -31,7 +31,7 @@ namespace Hello
                 ExpandoObject body = expandoDict["body"] as ExpandoObject;
 
                 json = expandoInput.ToJson();
-                runResult = new CommandRunner().RunViaRoute(new[]
+                runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
                 {
                     strongInput.Url,
                     strongInput.Method,

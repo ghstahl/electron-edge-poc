@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8CFD115F-624E-4531-92B8-9B98C9621218}</ProjectGuid>
+    <ProjectGuid>{43480BC8-C2E7-4985-8D09-02042BFFD457}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hello</RootNamespace>
-    <AssemblyName>Hello</AssemblyName>
+    <RootNamespace>Command.POC.Callbacks</RootNamespace>
+    <AssemblyName>Command.POC.Callbacks</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -44,48 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicExtensions.cs" />
-    <Compile Include="ExpandoObjectExtensions.cs" />
-    <Compile Include="Fetch.cs" />
-    <Compile Include="Input.cs" />
-    <Compile Include="InputValidationExtensions.cs" />
-    <Compile Include="Response.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="CommandSource.cs" />
+    <Compile Include="CommandAssembly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
-      <Project>{f41beaad-9ae2-4eca-a290-2cb989118860}</Project>
-      <Name>Command.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Command.MEF.Contracts\Command.MEF.Contracts.csproj">
       <Project>{E84B7EDB-1FDE-408E-B6A1-06F89D76DD9C}</Project>
       <Name>Command.MEF.Contracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Command.POC.Callbacks\Command.POC.Callbacks.csproj">
-      <Project>{43480bc8-c2e7-4985-8d09-02042bffd457}</Project>
-      <Name>Command.POC.Callbacks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
-      <Project>{6b9e93c7-f65f-4000-84eb-369b58367f91}</Project>
-      <Name>Programs.Repository</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ProgramsCommand\ProgramsCommand.csproj">
-      <Project>{ba84d611-1390-4d4a-8c2d-5544deda9b59}</Project>
-      <Name>ProgramsCommand</Name>
+    <ProjectReference Include="..\Programs.Models\Programs.Models.csproj">
+      <Project>{138614E4-00B1-4186-85FE-218A687770FA}</Project>
+      <Name>Programs.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Synoptic.CommandAction\Synoptic.CommandAction.csproj">
-      <Project>{f72d4e2d-edc7-4fc3-8fa5-44ba92984785}</Project>
+      <Project>{F72D4E2D-EDC7-4FC3-8FA5-44BA92984785}</Project>
       <Name>Synoptic.CommandAction</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>REM Copy  "$(OutDir)*.*" "$(SolutionDir)CommandComponents\*.*"
-</PostBuildEvent>
-  </PropertyGroup>
 </Project>
