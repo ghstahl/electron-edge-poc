@@ -56,8 +56,8 @@ namespace ProgramsCommand.Tests
                 $@"--body={json}"
             });
 
-            var items = runResult.Value as List<InstalledApp>;
-            Assert.AreEqual(count, items.Count);
+            var items = runResult.Value as InstalledApp[];
+            Assert.AreEqual(count, items.Length);
 
             var displayName = items[0].DisplayName;
 
@@ -96,8 +96,8 @@ namespace ProgramsCommand.Tests
                 $@"--body={json}"
             });
 
-            var items = runResult.Value as List<InstalledApp>;
-            Assert.AreEqual(100, items.Count);
+            var items = runResult.Value as InstalledApp[];
+            Assert.AreEqual(100, items.Length);
         }
     }
 }
