@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -95,7 +96,7 @@ namespace Synoptic.CEF.Tests
     public class ComplexTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public async Task TestMethod1()
         {
             var camelSettings = new JsonSerializerSettings
             {
@@ -124,7 +125,7 @@ namespace Synoptic.CEF.Tests
                 "complex-param-to-hyphen-with-return",
                 string.Format(@"--param-one={0}", json)
             });
-            runResult = new CommandRunner().RunViaRouteAsync(new[]
+            runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
             {
                 "My/Route/Base/v1/compleX",
                 "GET",

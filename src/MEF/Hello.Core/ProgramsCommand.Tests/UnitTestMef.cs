@@ -24,6 +24,7 @@ namespace ProgramsCommand.Tests
             var root = Assembly.GetAssembly(typeof(UnitTestMef)).Location;
             var dir = Path.GetDirectoryName(root);
             var components = dir;
+            var dd = Programs.ProgramsRepository;
             //  var components = Path.Combine(dir, "components");
             CommandCompositionHelper = new CommandCompositionHelper(components);
             CommandCompositionHelper.AssembleCommandComponents();
