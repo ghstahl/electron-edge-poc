@@ -1,4 +1,5 @@
 using Command.Common;
+using Programs.Models;
 using Programs.Repository;
 using Synoptic;
 

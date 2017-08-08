@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6B9E93C7-F65F-4000-84EB-369B58367F91}</ProjectGuid>
+    <ProjectGuid>{7F01F315-8F23-4335-97A0-070808C36A9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Programs.Repository</RootNamespace>
-    <AssemblyName>Programs.Repository</AssemblyName>
+    <RootNamespace>Command.MEF.Common</RootNamespace>
+    <AssemblyName>Command.MEF.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,16 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProgramsRepository.cs" />
-    <Compile Include="LaunchSpecialQuery.cs" />
-    <Compile Include="ProcessApp.cs" />
-    <Compile Include="ProgramsRepository.cs" />
+    <Compile Include="CommandCompositionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Programs.Models\Programs.Models.csproj">
-      <Project>{138614E4-00B1-4186-85FE-218A687770FA}</Project>
-      <Name>Programs.Models</Name>
+    <ProjectReference Include="..\Command.MEF.Contracts\Command.MEF.Contracts.csproj">
+      <Project>{E84B7EDB-1FDE-408E-B6A1-06F89D76DD9C}</Project>
+      <Name>Command.MEF.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

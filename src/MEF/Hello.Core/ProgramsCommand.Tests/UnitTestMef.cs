@@ -13,20 +13,13 @@ using Synoptic;
 
 namespace ProgramsCommand.Tests
 {
-    public class FetchInit
-    {
-        public string Method { get; set; }
-        public Dictionary<string, string> Headers { get; set; }
-        public dynamic Body { get; set; }
-    }
+
 
     [TestClass]
-    public class UnitTest1
-    {
+    public class UnitTestMef{
         private CommandCompositionHelper CommandCompositionHelper { get; set; }
-        public UnitTest1()
+        public UnitTestMef()
         {
-
             var root = Assembly.GetAssembly(typeof(UnitTestMef)).Location;
             var dir = Path.GetDirectoryName(root);
             var components = Path.Combine(dir, "components");
@@ -56,8 +49,8 @@ namespace ProgramsCommand.Tests
                 $@"--body={json}"
             });
 
-            var items = runResult.Value as List<InstalledApp>;
-            Assert.AreEqual(count, items.Count);
+            var items = runResult.Value as InstalledApp[];
+            Assert.AreEqual(count, items.Length);
 
             var displayName = items[0].DisplayName;
 

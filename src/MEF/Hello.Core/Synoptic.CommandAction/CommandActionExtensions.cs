@@ -10,7 +10,7 @@ namespace Synoptic
     public class RunResult
     {
         public Type ReturnType { get; set; }
-        public string Json { get; set; }
+        public object Value { get; set; }
     }
     public static class CommandActionExtensions
     {
@@ -24,6 +24,8 @@ namespace Synoptic
             if (commandAction.LinkedToMethod.ReturnType != typeof(void))
             {
                 var res = commandAction.LinkedToMethod.Invoke(instance, parameterValues);
+                returnResult.Value = res;
+                /*
                 returnResult.Json = JsonConvert.SerializeObject(
 
                     res,
@@ -31,6 +33,7 @@ namespace Synoptic
                     {
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
                     });
+                    */
             }
             else
             {

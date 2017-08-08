@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
-using System.Collections;
-using Newtonsoft.Json;
 using Programs.Repository;
 using Synoptic;
 
 namespace Hello
 {
-    public class Startup
+    public class Fetch
     {
-        public Startup()
+        public Fetch()
         {
             var programsRepository = new ProgramsRepository();
             ProgramsCommand.Programs.ProgramsRepository = programsRepository;
             ProgramsCommand.Processes.ProgramsRepository = programsRepository;
         }
-
-        public static int count = 0;
-
         public async Task<object> Invoke(object input)
         {
             Input strongInput = null;
@@ -36,7 +29,7 @@ namespace Hello
                 var expandoDict = expandoInput as IDictionary<string, object>;
 
                 ExpandoObject body = expandoDict["body"] as ExpandoObject;
-                
+
                 json = expandoInput.ToJson();
                 runResult = new CommandRunner().RunViaRoute(new[]
                 {
@@ -44,22 +37,13 @@ namespace Hello
                     strongInput.Method,
                     $@"--body={strongInput.JsonBody}"
                 });
-                jsonRunResult = JsonConvert.SerializeObject(runResult);
+                return new Response() {StatusCode = 200, StatusMessage = "OK", Value = runResult.Value};
             }
             catch (Exception e)
             {
                 error = e.Message;
             }
-
-            ++count;
-            if (!string.IsNullOrEmpty(error))
-            {
-                return $"Hello from dot net:[{count}],error[{error}]";
-            }
-            return $"Hello from dot net:[{count}],json[{json}]," +
-                   $"url[{strongInput.Url}],method[{strongInput.Method}]," +
-                   $"jsonHeaders[{strongInput.JsonHeaders}],jsonBody[{strongInput.JsonBody}]," +
-                   $"jsonRunResult:[{jsonRunResult}]";
+            return new Response() {StatusCode = 404, StatusMessage = error, Value = null};
         }
     }
 }

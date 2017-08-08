@@ -1,4 +1,4 @@
-namespace ProgramsCommand
+namespace Programs.Models
 {
     public class IsInstalledQuery
     {

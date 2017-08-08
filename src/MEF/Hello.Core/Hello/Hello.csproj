@@ -34,6 +34,7 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,9 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DynamicExtensions.cs" />
     <Compile Include="ExpandoObjectExtensions.cs" />
+    <Compile Include="Fetch.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="InputValidationExtensions.cs" />
+    <Compile Include="Response.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -54,6 +58,10 @@
     <ProjectReference Include="..\Command.Common\Command.Common.csproj">
       <Project>{f41beaad-9ae2-4eca-a290-2cb989118860}</Project>
       <Name>Command.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Command.MEF.Contracts\Command.MEF.Contracts.csproj">
+      <Project>{E84B7EDB-1FDE-408E-B6A1-06F89D76DD9C}</Project>
+      <Name>Command.MEF.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
       <Project>{6b9e93c7-f65f-4000-84eb-369b58367f91}</Project>
@@ -72,4 +80,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>Copy  "$(OutDir)*.*" "$(SolutionDir)CommandComponents\*.*"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

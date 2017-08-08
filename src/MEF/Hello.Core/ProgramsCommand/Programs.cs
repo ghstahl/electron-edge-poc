@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Command.Common;
+using Programs.Models;
 using Programs.Repository;
 using Synoptic;
 

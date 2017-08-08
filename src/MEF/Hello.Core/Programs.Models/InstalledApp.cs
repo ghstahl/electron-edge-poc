@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
-namespace Programs.Repository
+namespace Programs.Models
 {
     public class InstalledApp
     {
+        public InstalledApp() { }
         public InstalledApp(RegistryKey uninstallKey, string keyName)
         {
 

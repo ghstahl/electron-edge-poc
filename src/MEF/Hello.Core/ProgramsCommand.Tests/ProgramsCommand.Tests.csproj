@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnitTestMef.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,13 +59,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Programs.Repository\Programs.Repository.csproj">
-      <Project>{6B9E93C7-F65F-4000-84EB-369B58367F91}</Project>
-      <Name>Programs.Repository</Name>
+    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
+      <Project>{F41BEAAD-9AE2-4ECA-A290-2CB989118860}</Project>
+      <Name>Command.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProgramsCommand\ProgramsCommand.csproj">
-      <Project>{ba84d611-1390-4d4a-8c2d-5544deda9b59}</Project>
-      <Name>ProgramsCommand</Name>
+    <ProjectReference Include="..\Command.MEF.Common\Command.MEF.Common.csproj">
+      <Project>{7f01f315-8f23-4335-97a0-070808c36a9d}</Project>
+      <Name>Command.MEF.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Command.MEF.Contracts\Command.MEF.Contracts.csproj">
+      <Project>{e84b7edb-1fde-408e-b6a1-06f89d76dd9c}</Project>
+      <Name>Command.MEF.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Programs.Models\Programs.Models.csproj">
+      <Project>{138614E4-00B1-4186-85FE-218A687770FA}</Project>
+      <Name>Programs.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Synoptic.CommandAction\Synoptic.CommandAction.csproj">
       <Project>{f72d4e2d-edc7-4fc3-8fa5-44ba92984785}</Project>
@@ -81,4 +90,10 @@
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets'))" />
   </Target>
   <Import Project="..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>md "$(ProjectDir)$(OutDir)\components"
+echo copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
+copy "$(SolutionDir)/components/$(OutDir)*.*" "$(ProjectDir)$(OutDir)\components\*.*"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>
