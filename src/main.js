@@ -12,6 +12,12 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let heartBeat = {
+    heart: (data, callback) => {
+        console.log(data);
+        callback(null, data.key);
+    }
+}
 
 function createWindow() {
     // Create the browser window.
@@ -64,6 +70,19 @@ function createWindow() {
             'X-Symc-Fetch-App-Version': '1.0'
         },
         body: payload
+    }, function(error, result) {
+        if (error) throw error;
+        console.log(result);
+    });
+
+    localFetch({
+        url: 'local://v1/command-source/register-heart',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: heartBeat
     }, function(error, result) {
         if (error) throw error;
         console.log(result);
