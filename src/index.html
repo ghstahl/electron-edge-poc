@@ -41,6 +41,22 @@
         if (error) throw error;
         console.log(result);
     });
+
+    console.log('localFetch', window.boundAsync.localFetch);
+    window.boundAsync.localFetch({
+        url: 'local://v1/programs/is-installed',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: {
+            displayName: 'Norton Internet Security'
+        }
+    }, function(error, result) {
+        if (error) throw error;
+        console.log(result);
+    });
 </script>
 
 </html>

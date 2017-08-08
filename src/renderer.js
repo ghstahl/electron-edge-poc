@@ -6,9 +6,12 @@ const loadJsonFile = require('load-json-file');
 
 const app = remote.app;
 window.helloWorld = app.helloWorld;
-console.log('helloWorld', window.helloWorld);
+
+console.log('helloWorld', app.helloWorld);
+console.log('localFetch', app.localFetch);
 window.boundAsync = {
     fetchLocalJson: (url) => {
         return loadJsonFile(url);
-    }
+    },
+    localFetch: app.localFetch
 }

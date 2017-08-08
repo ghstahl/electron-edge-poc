@@ -28,6 +28,10 @@ function createWindow() {
         assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
         typeName: 'Hello.Startup'
     });
+    var localFetch = edge.func({
+        assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
+        typeName: 'Hello.Fetch'
+    });
 
     helloWorld({
         url: 'local://v1/programs/is-installed',
@@ -44,6 +48,7 @@ function createWindow() {
         console.log(result);
     });
     app.helloWorld = helloWorld;
+    app.localFetch = localFetch;
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 
