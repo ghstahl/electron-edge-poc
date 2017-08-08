@@ -58,9 +58,9 @@ namespace Synoptic.CEF.Tests
         }
 
         [CommandAction(Route = "v1/complex",Method = "get")]
-        public ComplexData ComplexParamToHyphenWithReturn([CommandParameter(FromBody = true)] ComplexData paramOne)
+        public ComplexData ComplexParamToHyphenWithReturn([CommandParameter(FromBody = true)] ComplexData body)
         {
-            Dump(paramOne);
+            Dump(body);
             return new ComplexData()
             {
                 SomeInt = 42,
@@ -125,12 +125,13 @@ namespace Synoptic.CEF.Tests
                 "complex-param-to-hyphen-with-return",
                 string.Format(@"--param-one={0}", json)
             });
-            runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+            var routeQuery = new RouteQuery()
             {
-                "My/Route/Base/v1/compleX",
-                "GET",
-                string.Format(@"--param-one={0}", json)
-            });
+                Body = new ComplexData() { SomeInt = 42, SomeString = "Hello Cat" },
+                Method = "GET",
+                Route = "My/Route/Base/v1/compleX"
+            };
+            runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
 
             runResult = new CommandRunner().WithCommandFromType<CommandRunnerTestClass>().Run(new[]
             {

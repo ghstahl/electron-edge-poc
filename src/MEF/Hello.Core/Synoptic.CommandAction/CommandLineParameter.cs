@@ -3,7 +3,7 @@
     internal class CommandLineParameter
     {
         public CommandLineParameter(string name,
-                                    string value)
+            object value)
         {
             Name = name;
             Value = value;

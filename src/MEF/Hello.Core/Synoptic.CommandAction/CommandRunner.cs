@@ -8,6 +8,12 @@ using Synoptic.Exceptions;
 
 namespace Synoptic
 {
+    public class RouteQuery
+    {
+        public string Route { get; set; }
+        public string Method { get; set; }
+        public dynamic Body { get; set; }
+    }
     public class CommandActionRecord
     {
         public CommandAction CommandAction { get; set; }
@@ -83,28 +89,16 @@ namespace Synoptic
         private readonly HelpGenerator _helpGenerator = new HelpGenerator();
         private OptionSet _optionSet;
 
-        public async Task<RunResult> RunViaRouteAsync(string[] args)
+        public async Task<RunResult> RunViaRouteAsync(RouteQuery routeQuery)
         {
-            if (args == null)
-                args = new string[0];
-            Queue<string> arguments = new Queue<string>(args);
-
-            if (_optionSet != null)
-                arguments = new Queue<string>(_optionSet.Parse(args));
 
             try
             {
                 if (CommandRecords.Count == 0)
                     throw new NoCommandsDefinedException();
 
-                if (arguments.Count == 0)
-                {
-                    _helpGenerator.ShowCommandUsage(_availableCommands, _optionSet);
-                    return new RunResult();
-                }
-
-                var route = arguments.Dequeue();
-                var method = arguments.Dequeue();
+                string route = routeQuery.Route;
+                string method = routeQuery.Method;
                 method = method.ToUpper();
                 route = route.ToLower();
 
@@ -121,8 +115,10 @@ namespace Synoptic
                 var action = actionRecord.CommandAction;
 
                 var parser = new CommandLineParser();
+                var clp = new List<CommandLineParameter> {new CommandLineParameter("body", routeQuery.Body) };
 
-                CommandLineParseResult parseResult = parser.Parse(action, arguments.ToArray());
+                CommandLineParseResult parseResult = new CommandLineParseResult(action, clp, new List<string>().ToArray());
+              
                 return await parseResult.CommandAction.RunAsync(_resolver, parseResult);
             }
             catch (CommandParseExceptionBase exception)

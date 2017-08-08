@@ -74,6 +74,7 @@
     <Compile Include="Exceptions\CommandParameterInvalidException.cs" />
     <Compile Include="Exceptions\CommandParseExceptionBase.cs" />
     <Compile Include="Exceptions\NoCommandsDefinedException.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="HelpGenerator.cs" />
     <Compile Include="ICommandActionFinder.cs" />

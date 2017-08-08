@@ -47,6 +47,28 @@ function createWindow() {
         if (error) throw error;
         console.log(result);
     });
+
+    console.log('localFetch', localFetch);
+    var payload = {
+        a: 2,
+        b: 3,
+        add: function(data, callback) {
+            callback(null, data.a + data.b);
+        }
+    };
+    localFetch({
+        url: 'local://v1/command-source/immediate-callback',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: payload
+    }, function(error, result) {
+        if (error) throw error;
+        console.log(result);
+    });
+
     app.helloWorld = helloWorld;
     app.localFetch = localFetch;
     // Open the DevTools.

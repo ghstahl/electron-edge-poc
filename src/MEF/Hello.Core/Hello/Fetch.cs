@@ -11,14 +11,12 @@ namespace Hello
     {
         public Fetch()
         {
-            var programsRepository = new ProgramsRepository();
-            ProgramsCommand.Programs.ProgramsRepository = programsRepository;
-            ProgramsCommand.Processes.ProgramsRepository = programsRepository;
+            Startup.Initialize();
         }
         public async Task<object> Invoke(object input)
         {
             Input strongInput = null;
-            string json = null;
+           
             string error = null;
             RunResult runResult = null;
             string jsonRunResult = null;
@@ -30,13 +28,13 @@ namespace Hello
 
                 ExpandoObject body = expandoDict["body"] as ExpandoObject;
 
-                json = expandoInput.ToJson();
-                runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+                var routeQuery = new RouteQuery()
                 {
-                    strongInput.Url,
-                    strongInput.Method,
-                    $@"--body={strongInput.JsonBody}"
-                });
+                    Body = strongInput.Body,
+                    Method = strongInput.Method,
+                    Route = strongInput.Url
+                };
+                runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
                 return new Response() {StatusCode = 200, StatusMessage = "OK", Value = runResult.Value};
             }
             catch (Exception e)

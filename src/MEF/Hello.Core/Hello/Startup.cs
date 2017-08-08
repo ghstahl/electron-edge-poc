@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using System.Collections;
+using System.IO;
+using System.Reflection;
+using Command.MEF.Common;
 using Newtonsoft.Json;
 using Programs.Repository;
 using Synoptic;
@@ -13,11 +16,27 @@ namespace Hello
 {
     public class Startup
     {
+        public static CommandCompositionHelper CommandCompositionHelper { get; set; }
+
+        public static void Initialize()
+        {
+            if (CommandCompositionHelper == null)
+            {
+                var root = Assembly.GetAssembly(typeof(Startup)).Location;
+                var dir = Path.GetDirectoryName(root);
+                var components = dir;
+               
+                //  var components = Path.Combine(dir, "components");
+                CommandCompositionHelper = new CommandCompositionHelper(components);
+                CommandCompositionHelper.AssembleCommandComponents();
+                CommandCompositionHelper.Initialize();
+            }
+
+        }
+
         public Startup()
         {
-            var programsRepository = new ProgramsRepository();
-            ProgramsCommand.Programs.ProgramsRepository = programsRepository;
-            ProgramsCommand.Processes.ProgramsRepository = programsRepository;
+            Startup.Initialize();
         }
 
         public static int count = 0;
@@ -38,12 +57,14 @@ namespace Hello
                 ExpandoObject body = expandoDict["body"] as ExpandoObject;
                 
                 json = expandoInput.ToJson();
-                runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+                var routeQuery = new RouteQuery()
                 {
-                    strongInput.Url,
-                    strongInput.Method,
-                    $@"--body={strongInput.JsonBody}"
-                });
+                    Body = strongInput.Body,
+                    Method = strongInput.Method,
+                    Route = strongInput.Url
+                };
+
+                runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
                 jsonRunResult = JsonConvert.SerializeObject(runResult);
             }
             catch (Exception e)

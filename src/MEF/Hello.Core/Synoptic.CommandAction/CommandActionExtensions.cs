@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -130,12 +131,19 @@ namespace Synoptic
         {
             if (!parameter.IsValueRequiredWhenOptionIsPresent)
                 value = value != null;
-            if (parameter.FromBody)
+            if (parameter.FromBody && value is string)
             {
                 var data = JsonConvert.DeserializeObject(
                     (string)value,
                     parameter.Type
                 );
+                return data;
+            }
+            if (parameter.FromBody && value is ExpandoObject)
+            {
+                var expandoDict = value as IDictionary<string, object>;
+
+                var data = expandoDict.ToObject(parameter.Type);
                 return data;
             }
             return Convert.ChangeType(value, parameter.Type);

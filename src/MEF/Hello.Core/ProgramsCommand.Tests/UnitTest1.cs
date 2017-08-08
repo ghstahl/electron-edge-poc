@@ -51,13 +51,14 @@ namespace ProgramsCommand.Tests
                 new PageQuery() { Offset = 0, Count = count },
                 camelSettings);
 
-
-            var runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+            var routeQuery = new RouteQuery()
             {
-                "v1/programs/page",
-                "GET",
-                $@"--body={json}"
-            });
+                Body = new PageQuery() {Offset = 0, Count = count},
+                Method = "GET",
+                Route = "v1/programs/page"
+            };
+
+            var runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
 
             var items = runResult.Value as InstalledApp[];
             Assert.AreEqual(count, items.Length);
@@ -68,13 +69,13 @@ namespace ProgramsCommand.Tests
                 new IsInstalledQuery() {DisplayName = displayName },
                 camelSettings);
 
-           
-            runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+            routeQuery = new RouteQuery()
             {
-                "v1/programs/is-installed",
-                "GET",
-                $@"--body={json}"
-            });
+                Body = new IsInstalledQuery() {DisplayName = displayName},
+                Method = "GET",
+                Route = "v1/programs/is-installed"
+            };
+            runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
             PrimitiveValue<bool> result = runResult.Value as PrimitiveValue<bool>;
             Assert.AreEqual(true, result.Value);
         }
@@ -91,13 +92,13 @@ namespace ProgramsCommand.Tests
                 new PageQuery() {Offset = 0, Count = 100},
                 camelSettings);
 
-
-            var runResult = await (new CommandRunner()).RunViaRouteAsync(new[]
+            var routeQuery = new RouteQuery()
             {
-                "v1/programs/page",
-                "GET",
-                $@"--body={json}"
-            });
+                Body = new PageQuery() { Offset = 0, Count = 100 },
+                Method = "GET",
+                Route = "v1/programs/page"
+            };
+            var runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
 
             var items = runResult.Value as InstalledApp[];
             Assert.AreEqual(100, items.Length);

@@ -59,6 +59,10 @@
       <Project>{f41beaad-9ae2-4eca-a290-2cb989118860}</Project>
       <Name>Command.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Command.MEF.Common\Command.MEF.Common.csproj">
+      <Project>{7F01F315-8F23-4335-97A0-070808C36A9D}</Project>
+      <Name>Command.MEF.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Command.MEF.Contracts\Command.MEF.Contracts.csproj">
       <Project>{E84B7EDB-1FDE-408E-B6A1-06F89D76DD9C}</Project>
       <Name>Command.MEF.Contracts</Name>

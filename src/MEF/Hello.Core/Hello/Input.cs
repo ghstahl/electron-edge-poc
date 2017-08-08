@@ -8,5 +8,6 @@ namespace Hello
         public string Url { get; set; }
         public object Body { get; set; }
         public string JsonBody { get; set; }
+        public bool BodyContainsFunc { get; set; }
     }
 }
