@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Programs.Repository;
 using Synoptic;
 
@@ -13,13 +15,15 @@ namespace Hello
         {
             Startup.Initialize();
         }
+
         public async Task<object> Invoke(object input)
         {
             Input strongInput = null;
-           
+
             string error = null;
             RunResult runResult = null;
             string jsonRunResult = null;
+            Response response = new Response() {StatusCode = 404, StatusMessage = "", Value = null};
             try
             {
                 strongInput = input.ToInput();
@@ -35,13 +39,16 @@ namespace Hello
                     Route = strongInput.Url
                 };
                 runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
-                return new Response() {StatusCode = 200, StatusMessage = "OK", Value = runResult.Value};
+
+                response = new Response() {StatusCode = 200, StatusMessage = "OK", Value = runResult.Value};
             }
             catch (Exception e)
             {
                 error = e.Message;
+                response.StatusMessage = error;
             }
-            return new Response() {StatusCode = 404, StatusMessage = error, Value = null};
+            var expandoValue = response.ToExpandoObject();
+            return expandoValue;
         }
     }
 }
