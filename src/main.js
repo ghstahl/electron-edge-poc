@@ -1,4 +1,6 @@
 const electron = require('electron')
+const downloadManager = require('./download-manager')
+
 var edge = require('electron-edge');
 
 // Module to control application life.
@@ -22,6 +24,8 @@ let heartBeat = {
 function createWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({ width: 800, height: 600 })
+    downloadManager.initializeDownloadManagerSync(mainWindow);
+
 
     // and load the index.html of the app.
     mainWindow.loadURL(url.format({

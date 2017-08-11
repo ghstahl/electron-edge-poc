@@ -14,7 +14,29 @@ console.log('localFetch', app.localFetch);
 
 window.boundAsync = {
     fetchLocalJson: (url) => {
-        return loadJsonFile(url);
+        let myFirstPromise = new Promise((resolve, reject) => {
+            loadJsonFile(url).then((data) => {
+                var response = { value: data, statusCode: 200, statusMessage: "OK" };
+                resolve(response);
+            }).catch((e) => {
+                console.log(e);
+                var response = { value: null, statusCode: 404, statusMessage: e.message };
+                resolve(response);
+            });
+        });
+        return myFirstPromise;
+
+        //        return loadJsonFile(url);
     },
     localFetch: app.localFetch
 }
+window.boundAsync.fetchLocalJson('file://does-not-exit.json').then(function(data) {
+    console.log(data);
+}).catch((e) => {
+    console.log(e);
+});
+window.boundAsync.fetchLocalJson('config.json').then(function(data) {
+    console.log(data);
+}).catch((e) => {
+    console.log(e);
+});
