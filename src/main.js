@@ -1,10 +1,10 @@
 const electron = require('electron')
 const downloadManager = require('./download-manager')
+const NativeFetch = require('./native-fetch')
 var edge = require('electron-edge');
 
 // Module to control application life.
 const app = electron.app
-app.route = {}
     // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -21,72 +21,11 @@ let heartBeat = {
     }
 }
 
+let nativeFetch = new NativeFetch(__dirname);
+
 downloadManager.initializeDownloadManagerSync(app.getPath('userData'));
-Object.assign(app.route, downloadManager.route);
-app.nativeFetch = edge.func({
-    assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
-    typeName: 'Hello.Fetch'
-});
-
-app.nativeFetchPromise = (url, init) => {
-    let myPromise = new Promise((resolve, reject) => {
-        try {
-            let nativeInit = { url: url };
-            Object.assign(nativeInit, init);
-            app.nativeFetch(nativeInit, function(error, result) {
-                if (error) {
-                    var response = { value: null, statusCode: 404, statusMessage: error.message };
-                    resolve(response);
-                } else {
-                    console.log(result);
-                    resolve(result);
-                }
-            });
-        } catch (e) {
-            reject(e.message);
-        }
-    });
-    return myPromise;
-}
-
-
-app.localFetch = (url, init) => {
-    try {
-        var arr = url.split("//");
-        var protocol = arr[0];
-        var route = arr[1];
-        var nodeRouteRecord = app.route[route];
-        if (nodeRouteRecord == null) {
-            return app.nativeFetchPromise(url, init);
-        } else {
-            let myPromise = new Promise((resolve, reject) => {
-                let action = nodeRouteRecord[init.method];
-                let response = { value: null, statusCode: 404, statusMessage: 'Not Found' };
-                if (action == null) {
-                    Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
-                } else {
-                    switch (init.method) {
-                        case 'GET':
-                            let data = action(init);
-                            Object.assign(response, { value: data, statusCode: 200, statusMessage: 'Success' });
-                            break;
-                        case 'POST':
-                            action(init);
-                            Object.assign(response, { value: null, statusCode: 200, statusMessage: 'Success' });
-                            break;
-                        default:
-                            Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
-                            break;
-                    }
-                }
-                resolve(response);
-            });
-            return myPromise;
-        }
-    } catch (e) {
-        throw e;
-    }
-}
+nativeFetch.addRoutes(downloadManager.routes);
+app.localFetch = nativeFetch.localFetch;
 
 function createWindow() {
     // Create the browser window.

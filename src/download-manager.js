@@ -87,20 +87,19 @@ function getOne(init) {
 }
 
 var downloadManager = {
-    initializeDownloadManagerSync: initializeDownloadManagerSync,
-    download: postDownload,
-    page: getPage
+    initializeDownloadManagerSync: initializeDownloadManagerSync
 }
 
-downloadManager.route = {}
+downloadManager.routes = {
+    'v1/download-manager/page': {
+        'GET': getPage
+    },
+    'v1/download-manager/one': {
+        'GET': getOne
+    },
+    'v1/download-manager/download': {
+        'POST': postDownload
+    }
+}
 
-downloadManager.route['v1/download-manager/page'] = {
-    'GET': getPage
-};
-downloadManager.route['v1/download-manager/one'] = {
-    'GET': getOne
-};
-downloadManager.route['v1/download-manager/download'] = {
-    'POST': postDownload
-};
 module.exports = downloadManager
