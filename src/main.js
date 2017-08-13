@@ -4,6 +4,7 @@ var edge = require('electron-edge');
 
 // Module to control application life.
 const app = electron.app
+app.route = {}
     // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -21,6 +22,50 @@ let heartBeat = {
 }
 
 downloadManager.initializeDownloadManagerSync(app.getPath('userData'));
+Object.assign(app.route, downloadManager.route);
+app.nativeFetch = edge.func({
+    assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
+    typeName: 'Hello.Fetch'
+});
+
+app.nativeFetchPromise = (url, init) => {
+    let myPromise = new Promise((resolve, reject) => {
+        try {
+            let nativeInit = { url: url };
+            Object.assign(nativeInit, init);
+            app.nativeFetch(nativeInit, function(error, result) {
+                if (error) {
+                    var response = { value: null, statusCode: 404, statusMessage: error.message };
+                    resolve(response);
+                } else {
+                    console.log(result);
+                    resolve(result);
+                }
+            });
+        } catch (e) {
+            reject(e.message);
+        }
+    });
+    return myPromise;
+}
+
+
+app.localFetch = (url, init) => {
+    try {
+        var arr = url.split("//");
+        var protocol = arr[0];
+        var route = arr[1];
+        var nodeNativeFetch = app.route[route];
+        if (nodeNativeFetch == null) {
+            return app.nativeFetchPromise(url, init);
+        } else {
+            let myPromise = new Promise((resolve, reject) => {});
+            return myPromise;
+        }
+    } catch (e) {
+        throw e;
+    }
+}
 
 function createWindow() {
     // Create the browser window.
@@ -39,10 +84,7 @@ function createWindow() {
         assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
         typeName: 'Hello.Startup'
     });
-    var localFetch = edge.func({
-        assemblyFile: path.join(__dirname, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
-        typeName: 'Hello.Fetch'
-    });
+
 
     helloWorld({
         url: 'local://v1/programs/is-installed',
@@ -59,7 +101,7 @@ function createWindow() {
         console.log(result);
     });
 
-    console.log('localFetch', localFetch);
+
     var payload = {
         a: 2,
         b: 3,
@@ -67,8 +109,8 @@ function createWindow() {
             callback(null, data.a + data.b);
         }
     };
-    localFetch({
-        url: 'local://v1/command-source/immediate-callback',
+    /*
+    app.localFetch('local://v1/command-source/immediate-callback', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -79,22 +121,35 @@ function createWindow() {
         if (error) throw error;
         console.log(result);
     });
+*/
+    app.localFetch('local://v1/command-source/immediate-callback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: payload
+    }).then((data) => {
+        console.log('immediate-callback', data);
+    }).catch((e) => {
+        console.log('immediate-callback', e);
+    });
 
-    localFetch({
-        url: 'local://v1/command-source/register-heart',
+    app.localFetch('local://v1/command-source/register-heart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Symc-Fetch-App-Version': '1.0'
         },
         body: heartBeat
-    }, function(error, result) {
-        if (error) throw error;
-        console.log(result);
+    }).then((data) => {
+        console.log('register heartbeat', data);
+    }).catch((e) => {
+        console.log('register heartbeat', e);
     });
 
     app.helloWorld = helloWorld;
-    app.localFetch = localFetch;
+
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 

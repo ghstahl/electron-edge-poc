@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Programs.Models;
 using Synoptic;
 using System.Diagnostics;
+using Command.Common;
+
 namespace Command.POC.Callbacks
 {
 
@@ -75,11 +77,12 @@ namespace Command.POC.Callbacks
         }
 
         [CommandAction(Route = "immediate-callback", Method = "POST")]
-        public async Task ImmediateCallbackAsync([CommandParameter(FromBody = true)] AddCallbackQuery body)
+        public async Task<PrimitiveValue<int>> ImmediateCallbackAsync([CommandParameter(FromBody = true)] AddCallbackQuery body)
         {
             var add = (Func<object, Task<object>>) body.Add;
             var twoNumbers = new {a = (int) body.A, b = (int) body.B};
             var addResult = (int) await add(twoNumbers);
+            return new PrimitiveValue<int>(addResult);
         }
 
         [CommandAction(Route = "register-heart", Method = "POST")]
