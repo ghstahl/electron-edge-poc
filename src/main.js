@@ -55,11 +55,32 @@ app.localFetch = (url, init) => {
         var arr = url.split("//");
         var protocol = arr[0];
         var route = arr[1];
-        var nodeNativeFetch = app.route[route];
-        if (nodeNativeFetch == null) {
+        var nodeRouteRecord = app.route[route];
+        if (nodeRouteRecord == null) {
             return app.nativeFetchPromise(url, init);
         } else {
-            let myPromise = new Promise((resolve, reject) => {});
+            let myPromise = new Promise((resolve, reject) => {
+                let action = nodeRouteRecord[init.method];
+                let response = { value: null, statusCode: 404, statusMessage: 'Not Found' };
+                if (action == null) {
+                    Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
+                } else {
+                    switch (init.method) {
+                        case 'GET':
+                            let data = action(init);
+                            Object.assign(response, { value: data, statusCode: 200, statusMessage: 'Success' });
+                            break;
+                        case 'POST':
+                            action(init);
+                            Object.assign(response, { value: null, statusCode: 200, statusMessage: 'Success' });
+                            break;
+                        default:
+                            Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
+                            break;
+                    }
+                }
+                resolve(response);
+            });
             return myPromise;
         }
     } catch (e) {
@@ -147,6 +168,25 @@ function createWindow() {
     }).catch((e) => {
         console.log('register heartbeat', e);
     });
+
+    app.localFetch('local://v1/download-manager/download', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: {
+            key: 'CuVQGg3',
+            url: 'http://i.imgur.com/CuVQGg3.jpg'
+        }
+    }).then((data) => {
+        console.log('download', data);
+    }).catch((e) => {
+        console.log('download', e);
+    });
+
+
+
 
     app.helloWorld = helloWorld;
 

@@ -4,13 +4,14 @@
             "name": "Debug Main Process",
             "type": "node",
             "request": "launch",
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/src/",
             "runtimeExecutable": "${workspaceRoot}/src/node_modules/.bin/electron",
             "windows": {
                 "runtimeExecutable": "${workspaceRoot}/src/node_modules/.bin/electron.cmd"
             },
             "program": "${workspaceRoot}/src/main.js",
-            "protocol": "legacy"
+            "protocol": "legacy",
+            "args": ["."]
         },
         {
             "name": "Debug Renderer Process",

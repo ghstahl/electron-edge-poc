@@ -5,6 +5,7 @@ const loki = require('lokijs');
 const lfsa = require('lokijs/src/loki-fs-structured-adapter');
 const DownloadManager = require("electron-download-manager");
 
+
 let db = null;
 let downloadCollection = null;
 
@@ -19,6 +20,9 @@ function databaseInitialize() {
 function initializeDownloadManagerSync(userDataPath) {
     let adapter = new lfsa();
     let userDb = path.join(userDataPath, 'download-manager.db');
+    let registerInit = { downloadFolder: path.join(userDataPath, 'download') };
+    DownloadManager.register(registerInit);
+
     db = new loki(userDb, {
         adapter: adapter,
         autoload: true,
@@ -26,11 +30,13 @@ function initializeDownloadManagerSync(userDataPath) {
         autosave: true,
         autosaveInterval: 4000
     });
+    databaseInitialize();
     console.log('downloadManager', db);
 }
 
-function download(record) {
-    var result = downloadCollection.findOne({ key: record.key });
+function postDownload(init) {
+    let record = init.body;
+    let result = downloadCollection.findOne({ key: record.key });
     if (result == null) {
         record.complete = false;
         downloadCollection.insert(record);
@@ -49,14 +55,23 @@ function download(record) {
             alert("ERROR: " + url);
             r.error = error;
             downloadCollection.update(r);
-            return;
+        } else {
+            r.complete = true;
+            downloadCollection.update(r);
         }
-        r.complete = true;
-        downloadCollection.update(r);
     });
 }
 
-function page(offset, count) {
+/*
+init:{
+    headers:[],
+    body:{}
+}
+*/
+function getPage(init) {
+    let query = init.body;
+    let offset = query.offset;
+    let count = query.count;
     var data = downloadCollection.data;
     if (offset < 0 || offset >= data.length) {
         return null;
@@ -65,10 +80,27 @@ function page(offset, count) {
     return subset;
 }
 
-var downloadManager = {
-    initializeDownloadManagerSync: initializeDownloadManagerSync,
-    download: download,
-    page: page
+function getOne(init) {
+    let query = init.body;
+    var result = downloadCollection.findOne({ key: query.key });
+    return result;
 }
 
+var downloadManager = {
+    initializeDownloadManagerSync: initializeDownloadManagerSync,
+    download: postDownload,
+    page: getPage
+}
+
+downloadManager.route = {}
+
+downloadManager.route['v1/download-manager/page'] = {
+    'GET': getPage
+};
+downloadManager.route['v1/download-manager/one'] = {
+    'GET': getOne
+};
+downloadManager.route['v1/download-manager/download'] = {
+    'POST': postDownload
+};
 module.exports = downloadManager
