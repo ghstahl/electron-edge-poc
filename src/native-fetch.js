@@ -54,6 +54,7 @@ module.exports = class NativeFetch {
                         } else {
                             switch (init.method) {
                                 case 'GET':
+                                case 'POST':
                                     if (action.sync != null) {
                                         let data = action.sync(init);
                                         Object.assign(response, { value: data, statusCode: 200, statusMessage: 'Success' });
@@ -67,20 +68,7 @@ module.exports = class NativeFetch {
                                         }
                                     }
                                     break;
-                                case 'POST':
-                                    if (action.sync != null) {
-                                        action.sync(init);
-                                        Object.assign(response, { value: null, statusCode: 200, statusMessage: 'Success' });
-                                        resolve(response);
-                                    } else {
-                                        if (action.promise != null) {
-                                            wrappedPromise(action.promise(init)).then((data) => {
-                                                Object.assign(response, data);
-                                                resolve(response);
-                                            })
-                                        }
-                                    }
-                                    break;
+
                                 default:
                                     Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
                                     resolve(response);

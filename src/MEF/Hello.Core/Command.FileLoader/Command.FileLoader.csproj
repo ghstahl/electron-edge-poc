@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
+      <Project>{F41BEAAD-9AE2-4ECA-A290-2CB989118860}</Project>
+      <Name>Command.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Synoptic.CommandAction\Synoptic.CommandAction.csproj">
       <Project>{F72D4E2D-EDC7-4FC3-8FA5-44BA92984785}</Project>
       <Name>Synoptic.CommandAction</Name>

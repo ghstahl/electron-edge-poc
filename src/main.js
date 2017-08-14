@@ -85,6 +85,21 @@ function createWindow() {
         console.log(result);
     });
 */
+
+
+    app.localFetch('local://v1/json-file/config', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: { rootFolder: __dirname }
+    }).then((data) => {
+        console.log('json-file/config', data);
+    }).catch((e) => {
+        console.log('json-file/config', e);
+    });
+
     app.localFetch('local://v1/command-source/immediate-callback', {
         method: 'POST',
         headers: {

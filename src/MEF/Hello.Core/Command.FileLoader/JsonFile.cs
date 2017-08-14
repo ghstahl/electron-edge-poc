@@ -1,11 +1,13 @@
 ﻿using Synoptic;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Command.Common;
 using Newtonsoft.Json;
 
 namespace Command.FileLoader
@@ -27,6 +29,7 @@ namespace Command.FileLoader
         public async Task PostConfigAsync([CommandParameter(FromBody = true)]ConfigOptions body)
         {
             RootFolder = body.RootFolder;
+          //  return new PrimitiveValue<bool>(true);
         }
 
         [CommandAction(Route = "read", Method = "GET")]

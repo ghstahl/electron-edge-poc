@@ -93,5 +93,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Command.Common\Command.Common.csproj">
+      <Project>{F41BEAAD-9AE2-4ECA-A290-2CB989118860}</Project>
+      <Name>Command.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using Command.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Synoptic.Exceptions;
@@ -33,7 +34,16 @@ namespace Synoptic
                 {
                     dynamic result =  (Task) commandAction.LinkedToMethod.Invoke(instance, parameterValues);
                     await result;
-                    res = result.Result;
+                    
+                    try
+                    {
+                        res = result.Result;
+                    }
+                    catch (Exception e)
+                    {
+                        res = null;
+                    }
+
                 }
                 else
                 {
