@@ -1,5 +1,6 @@
 const electron = require('electron')
 const downloadManager = require('./download-manager')
+const localFetchJson = require('./local-fetch-json')
 const NativeFetch = require('./native-fetch')
 var edge = require('electron-edge');
 
@@ -25,6 +26,8 @@ let nativeFetch = new NativeFetch(__dirname);
 
 downloadManager.initializeDownloadManagerSync(app.getPath('userData'));
 nativeFetch.addRoutes(downloadManager.routes);
+nativeFetch.addRoutes(localFetchJson.routes);
+
 app.localFetch = nativeFetch.localFetch;
 
 function createWindow() {
@@ -123,7 +126,20 @@ function createWindow() {
     }).catch((e) => {
         console.log('download', e);
     });
-
+    app.localFetch('local://v1/local-json/load', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: {
+            url: '/config.json'
+        }
+    }).then((data) => {
+        console.log('local-json', data);
+    }).catch((e) => {
+        console.log('local-json', e);
+    });
 
 
 

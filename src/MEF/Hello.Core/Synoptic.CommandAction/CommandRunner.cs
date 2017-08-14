@@ -109,7 +109,7 @@ namespace Synoptic
 
                 if (actionRecord == null)
                 {
-                    return new RunResult();
+                    return new RunResult() {ErrorCode = 404};
                 }
 
                 var action = actionRecord.CommandAction;
@@ -138,7 +138,7 @@ namespace Synoptic
 
                 throw new CommandInvocationException("Error executing command", innerException);
             }
-            return new RunResult();
+            return new RunResult() { ErrorCode = 404 };
         }
 
         public RunResult Run(string[] args)

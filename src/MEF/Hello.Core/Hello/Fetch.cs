@@ -39,8 +39,12 @@ namespace Hello
                     Route = strongInput.Url
                 };
                 runResult = await (new CommandRunner()).RunViaRouteAsync(routeQuery);
-
-                response = new Response() {StatusCode = 200, StatusMessage = "OK", Value = runResult.Value};
+                response = new Response() { StatusCode = 200, StatusMessage = "OK", Value = runResult.Value };
+                if (runResult.ErrorCode != 0)
+                {
+                    response.StatusCode = 404;
+                    response.StatusMessage = "Not Found";
+                }
             }
             catch (Exception e)
             {

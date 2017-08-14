@@ -1,7 +1,7 @@
 const electron = require("electron");
 const path = require('path')
 let edge = require('electron-edge');
-
+let wrappedPromise = require('./wrapped-promise')
 
 module.exports = class NativeFetch {
     // ..and an (optional) custom class constructor. If one is
@@ -14,6 +14,9 @@ module.exports = class NativeFetch {
             assemblyFile: path.join(rootFolder, '\\MEF\\Hello.Core\\Hello\\bin\\Debug\\hello.dll'),
             typeName: 'Hello.Fetch'
         });
+
+
+
         self.nativeFetchPromise = (url, init) => {
             let myPromise = new Promise((resolve, reject) => {
                 try {
@@ -51,19 +54,40 @@ module.exports = class NativeFetch {
                         } else {
                             switch (init.method) {
                                 case 'GET':
-                                    let data = action(init);
-                                    Object.assign(response, { value: data, statusCode: 200, statusMessage: 'Success' });
+                                    if (action.sync != null) {
+                                        let data = action.sync(init);
+                                        Object.assign(response, { value: data, statusCode: 200, statusMessage: 'Success' });
+                                        resolve(response);
+                                    } else {
+                                        if (action.promise != null) {
+                                            wrappedPromise(action.promise(init)).then((data) => {
+                                                Object.assign(response, data);
+                                                resolve(response);
+                                            })
+                                        }
+                                    }
                                     break;
                                 case 'POST':
-                                    action(init);
-                                    Object.assign(response, { value: null, statusCode: 200, statusMessage: 'Success' });
+                                    if (action.sync != null) {
+                                        action.sync(init);
+                                        Object.assign(response, { value: null, statusCode: 200, statusMessage: 'Success' });
+                                        resolve(response);
+                                    } else {
+                                        if (action.promise != null) {
+                                            wrappedPromise(action.promise(init)).then((data) => {
+                                                Object.assign(response, data);
+                                                resolve(response);
+                                            })
+                                        }
+                                    }
                                     break;
                                 default:
                                     Object.assign(response, { value: null, statusCode: 404, statusMessage: error.message });
+                                    resolve(response);
                                     break;
                             }
                         }
-                        resolve(response);
+
                     });
                     return myPromise;
                 }

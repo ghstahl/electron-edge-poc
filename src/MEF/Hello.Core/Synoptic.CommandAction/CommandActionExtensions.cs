@@ -14,6 +14,7 @@ namespace Synoptic
     {
         public Type ReturnType { get; set; }
         public object Value { get; set; }
+        public int ErrorCode { get; set; }
     }
     public static class CommandActionExtensions
     {

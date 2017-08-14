@@ -7,6 +7,7 @@ using Newtonsoft.Json.Serialization;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using Command.FileLoader;
 using Command.MEF.Common;
 using Newtonsoft.Json;
 using Programs.Repository;
@@ -30,6 +31,7 @@ namespace Hello
                 CommandCompositionHelper = new CommandCompositionHelper(components);
                 CommandCompositionHelper.AssembleCommandComponents();
                 CommandCompositionHelper.Initialize();
+                JsonFile.RootFolder = ""; // just making sure that the dll gets copied
             }
 
         }

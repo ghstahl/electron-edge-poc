@@ -92,13 +92,13 @@ var downloadManager = {
 
 downloadManager.routes = {
     'v1/download-manager/page': {
-        'GET': getPage
+        'GET': { sync: getPage }
     },
     'v1/download-manager/one': {
-        'GET': getOne
+        'GET': { sync: getOne }
     },
     'v1/download-manager/download': {
-        'POST': postDownload
+        'POST': { sync: postDownload }
     }
 }
 
