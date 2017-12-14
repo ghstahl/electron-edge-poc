@@ -80,3 +80,14 @@ self.registerHeartBeat = () => {
         }
   	};
 ```
+# Running
+1. Make sure that the Hello project is built
+2. run electron.
+```
+cd .\electron-edge\poc\src  
+npm run start
+```
+3. Attach the debugger to a running process  
+Here you will look for electron "Hello World"  
+
+4. In Electron you can reload the page by using the "View" menu.  
