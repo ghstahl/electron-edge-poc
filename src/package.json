@@ -1,31 +1,31 @@
 {
-    "name": "electron-quick-start",
-    "version": "1.0.0",
-    "description": "A minimal Electron application",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron .",
-        "debug": "electron . --inspect=5858"
-    },
-    "repository": "https://github.com/electron/electron-quick-start",
-    "keywords": [
-        "Electron",
-        "quick",
-        "start",
-        "tutorial",
-        "demo"
-    ],
-    "author": "GitHub",
-    "license": "CC0-1.0",
-    "devDependencies": {
-        "electron": "~1.6.2"
-    },
-    "dependencies": {
-        "electron-dl": "^1.10.0",
-        "electron-download-manager": "^1.3.1",
-        "electron-edge": "^6.5.5",
-        "electron-json-storage": "^3.0.7",
-        "load-json-file": "^2.0.0",
-        "lokijs": "^1.5.0"
-    }
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "debug": "electron . --inspect=5858"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "electron-dl": "^1.10.0",
+    "electron-download-manager": "^1.3.1",
+    "electron-edge": "^6.5.5",
+    "electron-json-storage": "^3.0.7",
+    "load-json-file": "^2.0.0",
+    "lokijs": "^1.5.0"
+  }
 }

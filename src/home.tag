@@ -42,26 +42,27 @@
 
     self.registerHeartBeat = () => {
         if(self.registrationResult == null){
-            window.boundAsync.localFetch({
-                url: 'local://v1/command-source/register-heart',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Symc-Fetch-App-Version': '1.0'
-                },
-                body: self.heartBeat
-            }, function(error, result) {
-                if (error) throw error;
-                console.log(result);
-                self.registrationResult = result;
-            });
+            window.boundAsync.localFetch('local://v1/command-source/register-heart',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Symc-Fetch-App-Version': '1.0'
+                    },
+                    body: self.heartBeat
+                }, function(error, result) {
+                    if (error) throw error;
+                    console.log(result);
+                    self.registrationResult = result;
+                });
         }
   	};
 
     self.unregisterHeartBeat = () => {
         if(self.registrationResult != null){
-            window.boundAsync.localFetch({
-                url: 'local://v1/command-source/unregister-heart',
+            window.boundAsync.localFetch('local://v1/command-source/unregister-heart',
+                {
+                
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
