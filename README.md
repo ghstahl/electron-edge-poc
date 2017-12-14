@@ -31,3 +31,52 @@ build the Hello project.
 ### Entry Point
 [C# Fetch](./src/MEF/Hello.Core/Hello/Fetch.cs)  
 This is where you will set your debug breakpoint  
+
+This is a MEF Based api router that has the same feel as any web app REST router.  It is actually a reporposed console app command router.  
+
+The following is a project that reads a json file and returns the data;  
+[Command.FileLoader](./src/MEF/Hello.Core/Command.FileLoader)  
+
+
+[Javascript on the Node side](./src/native-fetch.js)  
+Since fetch has 2 arguments and native fetch only has one, this javascript exposes to the render.js side a nativeFetch implementation with 2 arguments.  
+
+### Usage
+1. From Node  
+[Node side](./src/main.js)  
+```
+app.localFetch('local://v1/command-source/immediate-callback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Symc-Fetch-App-Version': '1.0'
+        },
+        body: payload
+    }).then((data) => {
+        console.log('immediate-callback', data);
+    }).catch((e) => {
+        console.log('immediate-callback', e);
+    });
+```
+
+[Render side](./src/home.tag)  This is a riot tag.  
+
+```
+self.registerHeartBeat = () => {
+        if(self.registrationResult == null){
+            window.boundAsync.localFetch('local://v1/command-source/register-heart',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Symc-Fetch-App-Version': '1.0'
+                    },
+                    body: self.heartBeat
+                }, function(error, result) {
+                    if (error) throw error;
+                    console.log(result);
+                    self.registrationResult = result;
+                });
+        }
+  	};
+```
