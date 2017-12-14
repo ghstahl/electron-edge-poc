@@ -1,0 +1,40 @@
+<div>
+	<RouterLink to="/">Home</RouterLink>
+	<RouterLink to="/welcome">Welcome</RouterLink>
+	<RouterLink to="/test/replace" replace>Replace</RouterLink>
+	<div id="app"></div>
+  </div>
+  
+  <script>
+  	import SvelteRouter from 'svelte-router'
+	import Home from './Home.html'
+	import Welcome from './Welcome.html'
+	import Replace from './Replace.html'
+	const { createRouter, RouterLink } = SvelteRouter
+	const router = createRouter({
+	  '/': Home,
+	  '/welcome': Welcome,
+	  '/test/replace': Replace
+	})
+	createRouter.listen(_ => {
+	  console.log('router changed')
+	})
+	export default {
+	  oncreate () {
+		router.create('#app')
+		// router.create(document.querySelector('#app'))
+	  },
+	  ondestroy () {
+		router.destroy()
+	  },
+	  components: {
+		RouterLink
+	  }
+	}
+  </script>
+  
+  <style>
+	.router-link-active {
+	  color: red;
+	}
+  </style>

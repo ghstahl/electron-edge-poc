@@ -1,0 +1,302 @@
+<h1>Welcome Svelte</h1>
+<button on:click="goHome()">Go Home</button>
+<div>
+
+	<form on:submit='handleSubmit( event )'>
+		<label>SessionData for {{spaRecord.SpaRecord.Key}}</label>
+		<input bind:value='test' type='text'>
+		
+		<button type='submit'>Store</button>
+	  </form>
+</div>
+
+<p>Count: {{count}}</p>
+<button on:click='incrementCount()'>+1</button>
+<button on:click='corsTest()'>corsTest</button>
+<p>pet: {{pet}}</p>
+<button on:click='corsTest2()'>corsTest2</button>
+<p>corsTest2: {{corsTest2}}</p>
+<button on:click='fetchIdentity()'>fetchIdentity</button>
+<p>identity.oidc.access_token: {{identity.oidc.access_token}}</p>
+<p>identity.access_code: {{identity.access_code}}</p>
+
+
+
+{{#if identity.oidc.access_token}}
+	<button on:click='requestToken()'>requestToken</button>
+	<p>token: {{token}}</p>
+	{{#if token}}
+		<button on:click='checkAuthenticatedToken()'>checkAuthenticatedToken</button>
+		<p>checkAuthenticatedToken.message: {{checkAuthenticatedToken.message}}</p>
+	{{/if}}
+{{/if}}
+
+<br/>
+{{#if identity.oidc.access_token}}
+ 
+	<button on:click='establishAuthenticatedSession()'>establishAuthenticatedSession</button>
+    <p>establishSession.message: {{establishSession.message}}</p>
+    <button on:click='signOut()'>signOut</button>
+	<p>signout.message: {{signoutResult.message}}</p>
+	<button on:click='checkAuthenticatedSession()'>checkAuthenticatedSession</button>
+	<p>checkAuthenticatedSession.message: {{checkAuthenticatedSession.message}}</p>
+
+{{/if}}
+<style>
+	h1 {
+		color: purple;
+	}
+</style>
+
+<script>
+  import SvelteRouter from 'svelte-router'
+  const { createRouter } = SvelteRouter
+  export default {
+    data () {
+		return {
+		  spaRecord:viewBagRecord,
+		  requestToken:{},
+          establishSession:{},
+          signoutResult:{},
+		  checkAuthenticatedSession:{},
+		  checkAuthenticatedToken:{},
+		  user: {loggedIn: false},
+		  pet:"",
+		  token:null,
+		  identity:{oidc:{
+			access_token:null
+		  }},
+		  count:0,
+		  corsTest2:""
+		}
+	  },
+	  oncreate() {
+		//read user object from localStorage
+		const user = localStorage.getItem('user');
+		if(user) {
+		  this.set({ user: {loggedIn: true} });
+		  return;
+		}
+	  },
+  
+	  ondestroy() {
+	  },
+  
+	  components: {
+ 
+	  },
+    methods: {
+		handleSubmit ( event ) {
+			// prevent the page from reloading
+			event.preventDefault();
+			var model = this.get();
+
+			var value = this.get( 'test' );
+			var body = JSON.stringify(
+            {
+                key: model.spaRecord.SpaRecord.Key,
+                data: value
+            });
+
+			fetch('/api/extSpa/session/store-data',
+            {
+				credentials: 'include',
+				headers: { 'Content-Type': 'application/json' },
+				method: 'POST',
+				body:body
+            }) 
+			.catch(function(error) {
+				console.log('/api/extSpa/session/store-data failed:' + error.message);
+			});
+
+			console.log( 'value', value );
+	},
+      goHome () {
+        createRouter.push('/')
+      },
+      incrementCount(){
+			let model = this.get();
+			this.set({ count: model.count + 1 });
+		},
+		fetchIdentity(){
+			let self = this;
+			var model = this.get();
+			var body = JSON.stringify(
+            {
+                query: 'query q($id: String!){identity(input: { id: $id }) {access_code oidc}}',
+                variables: '{"id": "NOF"}',
+                operationName: 'q'
+            });
+        	fetch('/api/graphql',
+            {
+                credentials: 'include',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res.data);
+				self.set({ identity: res.data.identity });
+				console.log(model);
+            });
+		},
+		requestToken(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://p7-referencewebapp-jwtauthapi.azurewebsites.net/api/Identity/request-token";
+			var body2 = JSON.stringify(
+            {
+                username: 'dog',
+                password: 'I am dog'
+            });
+			fetch(url,
+            {
+				headers: { 'Content-Type': 'application/json' },
+				method: 'POST',
+				body:body2
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ token: res.token });
+			
+            });
+			
+		},
+		checkAuthenticatedToken(){
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var model = this.get();
+			console.log(model);
+		 
+			var url = "https://p7-referencewebapp-jwtauthapi.azurewebsites.net/api/Identity/check-authentication";
+			fetch(url,
+            {
+				credentials: 'include',
+				method: 'GET',
+				headers: {
+					'Authorization': 'Bearer '+model.token, 
+					'Content-Type': 'text/plain'
+				}
+			 
+            })
+            .then(res => res.text())
+            .then(function (res) {
+				console.log(res);
+				self.set({ checkAuthenticatedToken:{ message:res }});
+            })
+			.catch(function(error) {
+				self.set({ checkAuthenticatedToken:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+		},
+		establishAuthenticatedSession(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/sign-in?username=herb&password=1234";
+			fetch(url,
+            {
+                credentials: 'include',
+				headers: { 'Content-Type': 'text/plain' },
+				method: 'GET'
+            })
+            .then(function (res) {
+				console.log(res);
+				self.set({ establishSession:{ message:"Success" }});
+            }).catch(function(error) {
+				self.set({ establishSession:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+			
+        },
+        signOut(){
+			
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/sign-out";
+			fetch(url,
+            {
+                credentials: 'include',
+				headers: { 'Content-Type': 'text/plain' },
+				method: 'GET'
+            })
+            .then(function (res) {
+				console.log(res);
+				self.set({ signoutResult:{ message:"Success" }});
+            }).catch(function(error) {
+				self.set({ signoutResult:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+			
+		},
+		
+		checkAuthenticatedSession(){
+			let self = this;
+			var model = this.get();
+			console.log(model);
+			var url = "https://p7-referencewebapp-cookieauthapi.azurewebsites.net/api/Identity/check-authentication";
+			fetch(url,
+            {
+				credentials: 'include',
+				method: 'GET',
+				headers: { 'Content-Type': 'text/plain' }
+            })
+            .then(res => res.text())
+            .then(function (res) {
+				console.log(res);
+				self.set({ checkAuthenticatedSession:{ message:res }});
+            })
+			.catch(function(error) {
+				self.set({ checkAuthenticatedSession:{ message:error.message }});
+				console.log('There has been a problem with your fetch operation: ' + error.message);
+			});
+		},
+		corsTest(){
+			let self = this;
+			let model = this.get();
+			// do some CORS
+			var body2 = JSON.stringify(
+            {
+                name: 'dog',
+                description: 'I am dog'
+            });
+        	fetch('https://pingo7api.azurewebsites.net/api2/OpenApi/Create',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body2
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ pet: JSON.stringify(res) });
+			
+            });
+		},
+		corsTest2() {
+			let self = this;
+			let model = this.get();
+			fetch('https://pingo7api.azurewebsites.net/api2/OpenApi/testing2',
+            {
+                method: 'GET',
+                headers: { 'Content-Type': 'text/plain' },
+            })
+            .then(res => res.json())
+            .then(function (res) {
+				console.log(res);
+				self.set({ corsTest2: "api3:" + JSON.stringify(res) });
+            });
+		} 
+    },
+	  helpers: {
+		 
+	  }
+  }
+</script>
