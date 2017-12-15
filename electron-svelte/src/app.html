@@ -1,3 +1,48 @@
+<div class="window">
+  <header class="toolbar toolbar-header">
+    <h1 class="title">Header</h1>
+  </header>
+  <div class="window-content">
+    <div class="pane-group">
+      <div class="pane-sm sidebar">
+				<nav class="nav-group">
+					<h5 class="nav-group-title">Favorites</h5>
+					<a class="nav-group-item active" on:click="goHome()">
+						<span class="icon icon-home"></span>
+						Home
+						
+					</a>
+					<span class="nav-group-item">
+						<span class="icon icon-download"></span>
+						<RouterLink to="/welcome">Welcome</RouterLink>
+					</span>
+					<span class="nav-group-item">
+						<span class="icon icon-folder"></span>
+						Documents
+					</span>
+					<span class="nav-group-item">
+						<span class="icon icon-signal"></span>
+						AirPlay
+					</span>
+					<span class="nav-group-item">
+						<span class="icon icon-print"></span>
+						Applications
+					</span>
+					<span class="nav-group-item">
+						<span class="icon icon-cloud"></span>
+						Desktop
+					</span>
+				</nav>
+			</div>
+      <div class="pane"><div id="app"></div></div>
+    </div>
+  </div>
+  <footer class="toolbar toolbar-footer">
+    <h1 class="title">Footer</h1>
+  </footer>
+</div>
+
+
 <div>
 	<RouterLink to="/">Home</RouterLink>
 	<RouterLink to="/welcome">Welcome</RouterLink>
@@ -20,6 +65,11 @@
 	  console.log('router changed')
 	})
 	export default {
+		methods: {
+      goHome () {
+        createRouter.push('/')
+      }
+    },
 	  oncreate () {
 		router.create('#app')
 		// router.create(document.querySelector('#app'))

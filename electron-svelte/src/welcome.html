@@ -1,14 +1,6 @@
 <h1>Welcome Svelte</h1>
 <button on:click="goHome()">Go Home</button>
-<div>
-
-	<form on:submit='handleSubmit( event )'>
-		<label>SessionData for {{spaRecord.SpaRecord.Key}}</label>
-		<input bind:value='test' type='text'>
-		
-		<button type='submit'>Store</button>
-	  </form>
-</div>
+ 
 
 <p>Count: {{count}}</p>
 <button on:click='incrementCount()'>+1</button>
@@ -22,13 +14,11 @@
 
 
 
-{{#if identity.oidc.access_token}}
-	<button on:click='requestToken()'>requestToken</button>
-	<p>token: {{token}}</p>
-	{{#if token}}
-		<button on:click='checkAuthenticatedToken()'>checkAuthenticatedToken</button>
-		<p>checkAuthenticatedToken.message: {{checkAuthenticatedToken.message}}</p>
-	{{/if}}
+<button on:click='requestToken()'>requestToken</button>
+<p>token: {{token}}</p>
+{{#if token}}
+	<button on:click='checkAuthenticatedToken()'>checkAuthenticatedToken</button>
+	<p>checkAuthenticatedToken.message: {{checkAuthenticatedToken.message}}</p>
 {{/if}}
 
 <br/>
@@ -54,7 +44,7 @@
   export default {
     data () {
 		return {
-		  spaRecord:viewBagRecord,
+		 
 		  requestToken:{},
           establishSession:{},
           signoutResult:{},
@@ -94,7 +84,7 @@
 			var value = this.get( 'test' );
 			var body = JSON.stringify(
             {
-                key: model.spaRecord.SpaRecord.Key,
+                key: '234',
                 data: value
             });
 
